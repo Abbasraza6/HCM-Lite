@@ -5,16 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payslip - HCM Lite</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .net-salary-row {
+      background: rgba(255, 255, 255, 0.05) !important;
+      font-weight: bold;
+    }
+    .net-salary-row td {
+      color: var(--text-dark) !important;
+    }
+  </style>
 </head>
 <body>
   <div class="sidebar">
     <div class="sidebar-header">
       <h2>HCM Lite</h2>
-      <button onclick="toggleSidebar()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;" class="mobile-menu-btn">✕</button>
+      <button onclick="toggleSidebar()" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-dark);" class="mobile-menu-btn">✕</button>
     </div>
     <div class="sidebar-nav">
       <a href="admin.html" id="dashLink">Dashboard</a>
-      <a href="payslip.html" class="active">Payslip</a>
+      <a href="employees.html">Employees</a>
+      <a href="leaves.html">Leave Requests</a>
+      <a href="settings.html">Settings</a>
+      <a href="payslip.html" class="active">Payslips</a>
     </div>
   </div>
 
@@ -29,16 +41,16 @@
 
     <div class="content-area">
       <div id="adminEmpSelect" style="margin-bottom: 20px; display: none;">
-        <label>Select Employee: </label>
-        <select id="empSelectDropdown" onchange="generatePayslip()"></select>
+        <label style="margin-bottom: 8px; display: block; color: var(--text-muted);">Select Employee: </label>
+        <select id="empSelectDropdown" onchange="generatePayslip()" style="max-width: 300px; padding: 10px; background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-dark); border-radius: 8px;"></select>
       </div>
 
-      <div style="background: white; padding: 32px; border-radius: 8px; max-width: 600px; border: 1px solid var(--border-color);" id="printablePayslip">
-        <h2 style="text-align: center; margin-bottom: 24px;" id="payCompanyName">Company</h2>
-        <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #ccc;">
+      <div style="background: var(--card-bg); padding: 32px; border-radius: 16px; max-width: 600px; border: 1px solid var(--border-color);" id="printablePayslip">
+        <h2 style="text-align: center; margin-bottom: 24px; color: var(--text-dark);" id="payCompanyName">Company</h2>
+        <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid var(--border-color);">
         
-        <p><strong>Employee Name:</strong> <span id="payEmpName"></span></p>
-        <p><strong>Department:</strong> <span id="payEmpDept"></span></p>
+        <p style="margin-bottom: 8px;"><strong>Employee Name:</strong> <span id="payEmpName"></span></p>
+        <p style="margin-bottom: 8px;"><strong>Department:</strong> <span id="payEmpDept"></span></p>
         <p style="margin-bottom: 20px;"><strong>Month:</strong> October 2026</p>
 
         <table style="margin-bottom: 24px;">
@@ -52,9 +64,9 @@
           </tr>
           <tr>
             <td>Deductions (Absents / Half Days)</td>
-            <td id="payDeductions" style="color: red;">0</td>
+            <td id="payDeductions" style="color: var(--danger);">0</td>
           </tr>
-          <tr style="font-weight: bold; background: #f8fafc;">
+          <tr class="net-salary-row">
             <td>Net Payable Salary</td>
             <td id="payNet">0</td>
           </tr>
