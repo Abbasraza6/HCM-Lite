@@ -9,7 +9,10 @@
 </head>
 <body>
   <div class="sidebar">
-    <div class="sidebar-header"><h2>HCM Lite</h2></div>
+    <div class="sidebar-header">
+      <h2>HCM Lite</h2>
+      <button onclick="toggleSidebar()" style="background:none; border:none; font-size:1.2rem; cursor:pointer; display:none;" class="mobile-close-btn">✕</button>
+    </div>
     <div class="sidebar-nav">
       <a href="admin.html" class="active">Dashboard</a>
       <a href="employees.html">Employees</a>
@@ -21,7 +24,10 @@
 
   <div class="main-wrapper">
     <header>
-      <div id="companyTitle" style="font-weight: 600; font-size: 1.1rem;">Company Name</div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+        <div id="companyTitle" style="font-weight: 600; font-size: 1.1rem;">Company Name</div>
+      </div>
       <div class="header-user">
         <span id="userName">Admin</span>
         <button class="btn-logout" onclick="handleLogout()">Logout</button>
@@ -88,6 +94,11 @@
     
     document.getElementById("companyTitle").innerText = DB.getCompany().name;
     document.getElementById("userName").innerText = DB.getSession().name;
+
+    function toggleSidebar() {
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.classList.toggle("mobile-open");
+    }
 
     function toggleChat() {
       const widget = document.getElementById("chatWidget");
