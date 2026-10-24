@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payslip - HCM Lite</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header"><h2>HCM Lite</h2></div>
+    <div class="sidebar-nav">
+      <a href="admin.html" id="dashLink">Dashboard</a>
+      <a href="payslip.html" class="active">Payslip</a>
+    </div>
+  </div>
+
+  <div class="main-wrapper">
+    <header>
+      <div>Monthly Payslip</div>
+      <button class="btn-logout" onclick="handleLogout()">Logout</button>
+    </header>
+
+    <div class="content-area">
+      <div id="adminEmpSelect" style="margin-bottom: 20px; display: none;">
+        <label>Select Employee: </label>
+        <select id="empSelectDropdown" onchange="generatePayslip()"></select>
+      </div>
+
+      <div style="background: white; padding: 32px; border-radius: 8px; max-width: 600px; border: 1px solid var(--border-color);" id="printablePayslip">
+        <h2 style="text-align: center; margin-bottom: 24px;" id="payCompanyName">Company</h2>
+        <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #ccc;">
+        
+        <p><strong>Employee Name:</strong> <span id="payEmpName"></span></p>
+        <p><strong>Department:</strong> <span id="payEmpDept"></span></p>
+        <p style="margin-bottom: 20px;"><strong>Month:</strong> October 2026</p>
+
+        <table style="margin-bottom: 24px;">
+          <tr>
+            <th>Description</th>
+            <th>Amount (PKR)</th>
+          </tr>
+          <tr>
+            <td>Base Monthly Salary</td>
+            <td id="payBase">0</td>
+          </tr>
+          <tr>
+            <td>Deductions (Absents / Half Days)</td>
+            <td id="payDeductions" style="color: red;">0</td>
+          </tr>
+          <tr style="font-weight: bold; background: #f8fafc;">
+            <td>Net Payable Salary</td>
+            <td id="payNet">0</td>
+          </tr>
+        </table>
+
+        <button class="btn-primary" onclick="window.print()">Print / Save PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    checkAuth();
+    const session = DB.getSession();
+    const users = DB.getUsers().filter(u => u.role === "employee");
+    const company = DB.getCompany();
+
+    document.getElementById("payCompanyName").innerText = company.name;
+
+    if (session.role === "admin") {
+      document.getElementById("dashLink").href = "admin.html";
+      const select = document.getElementById("empSelectDropdown");
+      document.getElementById("adminEmpSelect").style.display = "block";
+
+      select.innerHTML = users.map(u => `<option value="${u.id}">${u.name}</option>`).join("");
+      generatePayslip();
+    } else {
+      document.getElementById("dashLink").href = "employee.html";
+      renderSlipDetails(session);
+    }
+
+    function generatePayslip() {
+      const selectedId = parseInt(document.getElementById("empSelectDropdown").value);
+      const targetEmp = users.find(u => u.id === selectedId);
+      if (targetEmp) renderSlipDetails(targetEmp);
+    }
+
+    function renderSlipDetails(emp) {
+      document.getElementById("payEmpName").innerText = emp.name;
+      document.getElementById("payEmpDept").innerText = emp.department;
+
+      const attendance = DB.getAttendance().filter(a => a.empId === emp.id);
+      const halfDays = attendance.filter(a => a.status === "Half Day").length;
+
+      const workingDaysInMonth = 22;
+      const perDaySalary = emp.salary / workingDaysInMonth;
+      
+      const deductions = perDaySalary * (0 + (0.5 * halfDays));
+      const net = emp.salary - deductions;
+
+      document.getElementById("payBase").innerText = emp.salary.toLocaleString();
+      document.getElementById("payDeductions").innerText = deductions.toFixed(2);
+      document.getElementById("payNet").innerText = net.toFixed(2);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HCM Lite - Login</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="justify-content: center; align-items: center; background: #eef2f6;">
+  <div style="background: white; padding: 32px; border-radius: 12px; width: 380px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+    <h2 id="formTitle" style="margin-bottom: 20px; text-align: center;">Login to HCM Lite</h2>
+    
+    <form id="authForm">
+      <div id="companySetupFields" style="display: none;">
+        <div class="form-group">
+          <label>Company Name</label>
+          <input type="text" id="setupCompanyName">
+        </div>
+        <div class="form-group">
+          <label>Admin Name</label>
+          <input type="text" id="setupAdminName">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="authEmail" required>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="authPassword" required>
+      </div>
+
+      <button type="submit" class="btn-primary" style="width: 100%;">Submit</button>
+    </form>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    const company = DB.getCompany();
+    const setupFields = document.getElementById("companySetupFields");
+    const formTitle = document.getElementById("formTitle");
+
+    if (!company) {
+      formTitle.innerText = "Setup Your Company";
+      setupFields.style.display = "block";
+    }
+
+    document.getElementById("authForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      
+      if (!company) {
+        const compName = document.getElementById("setupCompanyName").value;
+        const adminName = document.getElementById("setupAdminName").value;
+        const email = document.getElementById("authEmail").value;
+        const password = document.getElementById("authPassword").value;
+
+        DB.setCompany({
+          name: compName,
+          startTime: "09:00",
+          graceMinutes: 15,
+          leaveQuota: 20
+        });
+
+        const adminUser = {
+          id: Date.now(),
+          name: adminName,
+          email: email,
+          password: password,
+          role: "admin",
+          department: "Management",
+          salary: 0
+        };
+
+        DB.setUsers([adminUser]);
+        DB.setSession(adminUser);
+        window.location.href = "admin.html";
+      } else {
+        const email = document.getElementById("authEmail").value;
+        const password = document.getElementById("authPassword").value;
+        const users = DB.getUsers();
+
+        const user = users.find(u => u.email === email && u.password === password);
+        if (user) {
+          DB.setSession(user);
+          if (user.role === "admin") window.location.href = "admin.html";
+          else window.location.href = "employee.html";
+        } else {
+          alert("Invalid Email or Password");
+        }
+      }
+    });
+  </script>
+</body>
+</html>

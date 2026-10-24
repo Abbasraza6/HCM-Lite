@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Employees - HCM Lite</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header"><h2>HCM Lite</h2></div>
+    <div class="sidebar-nav">
+      <a href="admin.html">Dashboard</a>
+      <a href="employees.html" class="active">Employees</a>
+      <a href="leaves.html">Leave Requests</a>
+      <a href="settings.html">Settings</a>
+      <a href="payslip.html">Payslips</a>
+    </div>
+  </div>
+
+  <div class="main-wrapper">
+    <header>
+      <div>Manage Employees</div>
+      <button class="btn-logout" onclick="handleLogout()">Logout</button>
+    </header>
+
+    <div class="content-area" style="display: flex; gap: 24px; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 300px;" class="data-table-container">
+        <div style="padding: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+          <input type="text" id="searchEmp" placeholder="Search by name/email..." oninput="filterEmps()">
+          <select id="filterDept" onchange="filterEmps()">
+            <option value="">All Departments</option>
+            <option value="IT">IT</option>
+            <option value="HR">HR</option>
+            <option value="Finance">Finance</option>
+          </select>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Salary</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="employeeTableBody"></tbody>
+        </table>
+      </div>
+
+      <div style="width: 320px; background: white; padding: 20px; border-radius: 8px; height: fit-content;">
+        <h3>Add Employee</h3>
+        <form id="addEmpForm" onsubmit="createEmployee(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="empName" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="empEmail" required>
+            <div id="emailError" class="error-text"></div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="empPassword" required>
+          </div>
+          <div class="form-group">
+            <label>Department</label>
+            <select id="empDept" required>
+              <option value="IT">IT</option>
+              <option value="HR">HR</option>
+              <option value="Finance">Finance</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Monthly Salary</label>
+            <input type="number" id="empSalary" min="1" required>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%;">Create Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/employees.js"></script>
+  <script>
+    checkAuth("admin");
+    renderEmployeesTable();
+
+    function filterEmps() {
+      const term = document.getElementById("searchEmp").value;
+      const dept = document.getElementById("filterDept").value;
+      renderEmployeesTable(term, dept);
+    }
+  </script>
+</body>
+</html>
