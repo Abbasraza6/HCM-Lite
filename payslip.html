@@ -8,7 +8,10 @@
 </head>
 <body>
   <div class="sidebar">
-    <div class="sidebar-header"><h2>HCM Lite</h2></div>
+    <div class="sidebar-header">
+      <h2>HCM Lite</h2>
+      <button onclick="toggleSidebar()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;" class="mobile-menu-btn">✕</button>
+    </div>
     <div class="sidebar-nav">
       <a href="admin.html" id="dashLink">Dashboard</a>
       <a href="payslip.html" class="active">Payslip</a>
@@ -17,7 +20,10 @@
 
   <div class="main-wrapper">
     <header>
-      <div>Monthly Payslip</div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+        <div>Monthly Payslip</div>
+      </div>
       <button class="btn-logout" onclick="handleLogout()">Logout</button>
     </header>
 
@@ -63,6 +69,12 @@
   <script src="js/auth.js"></script>
   <script>
     checkAuth();
+
+    function toggleSidebar() {
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.classList.toggle("mobile-open");
+    }
+
     const session = DB.getSession();
     const users = DB.getUsers().filter(u => u.role === "employee");
     const company = DB.getCompany();

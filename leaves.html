@@ -8,7 +8,10 @@
 </head>
 <body>
   <div class="sidebar">
-    <div class="sidebar-header"><h2>HCM Lite</h2></div>
+    <div class="sidebar-header">
+      <h2>HCM Lite</h2>
+      <button onclick="toggleSidebar()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;" class="mobile-menu-btn">✕</button>
+    </div>
     <div class="sidebar-nav">
       <a href="admin.html">Dashboard</a>
       <a href="employees.html">Employees</a>
@@ -20,7 +23,10 @@
 
   <div class="main-wrapper">
     <header>
-      <div>Leave Requests Management</div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+        <div>Leave Requests Management</div>
+      </div>
       <button class="btn-logout" onclick="handleLogout()">Logout</button>
     </header>
 
@@ -49,6 +55,12 @@
   <script src="js/leave.js"></script>
   <script>
     checkAuth("admin");
+
+    function toggleSidebar() {
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.classList.toggle("mobile-open");
+    }
+
     const leaves = DB.getLeaves();
     const tbody = document.getElementById("adminLeavesTable");
 
