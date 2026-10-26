@@ -12,56 +12,38 @@
       <h2>HCM Lite</h2>
       <button onclick="toggleSidebar()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;" class="mobile-menu-btn">✕</button>
     </div>
-    <div class="sidebar-nav">
-      <a href="admin.html">Dashboard</a>
-      <a href="employees.html">Employees</a>
-      <a href="leaves.html">Leave Requests</a>
-      <a href="settings.html" class="active">Settings</a>
-      <a href="payslip.html">Payslips</a>
-    </div>
+    <div class="sidebar-nav" id="sidebarNavLinks"></div>
   </div>
 
   <div class="main-wrapper">
     <header>
       <div style="display: flex; align-items: center; gap: 12px;">
         <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
-        <div>Company Settings</div>
+        <div id="headerTitle" style="font-weight: 600;">System Settings</div>
       </div>
-      <button class="btn-logout" onclick="handleLogout()">Logout</button>
+      <div class="header-user">
+        <span id="headerUserName">User</span>
+        <button class="btn-logout" onclick="handleLogout()">Logout</button>
+      </div>
     </header>
 
-    <div class="content-area">
-<<<<<<< HEAD
-      <div class="chart-box" style="max-width: 500px;">
-        <form id="settingsForm">
+    <div class="content-area" id="settingsContentArea">
+      <div style="max-width: 600px; margin: 0 auto;" class="chart-box">
+        <h3 style="margin-bottom: 20px; color: var(--text-dark);">Company Settings</h3>
+        <form id="settingsForm" onsubmit="saveSettings(event)">
           <div class="form-group">
-            <label>Office Start Time</label>
-            <input type="time" id="startTime" required style="width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; outline: none;">
+            <label>Company Name</label>
+            <div class="input-wrapper">
+              <input type="text" id="companyName" value="HCM Lite Inc." required style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none;">
+            </div>
           </div>
           <div class="form-group">
-            <label>Grace Minutes</label>
-            <input type="number" id="graceMinutes" required style="width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; outline: none;">
+            <label>Annual Leave Quota</label>
+            <div class="input-wrapper">
+              <input type="number" id="leaveQuota" value="20" required style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none;">
+            </div>
           </div>
-          <div class="form-group">
-            <label>Yearly Leave Quota</label>
-            <input type="number" id="leaveQuota" required style="width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; outline: none;">
-=======
-      <div style="background: white; padding: 24px; border-radius: 8px; max-width: 500px;">
-        <form id="settingsForm">
-          <div class="form-group">
-            <label>Office Start Time</label>
-            <input type="time" id="startTime" required>
-          </div>
-          <div class="form-group">
-            <label>Grace Minutes</label>
-            <input type="number" id="graceMinutes" required>
-          </div>
-          <div class="form-group">
-            <label>Yearly Leave Quota</label>
-            <input type="number" id="leaveQuota" required>
->>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
-          </div>
-          <button type="submit" class="btn-primary">Save Settings</button>
+          <button type="submit" class="btn-primary" style="width: 100%;">Save Settings</button>
         </form>
       </div>
     </div>
@@ -70,36 +52,40 @@
   <script src="js/storage.js"></script>
   <script src="js/auth.js"></script>
   <script>
-    checkAuth("admin");
+    checkAuth();
+    const session = DB.getSession();
+    if (session) {
+      document.getElementById("headerUserName").innerText = session.name;
+      const navLinks = document.getElementById("sidebarNavLinks");
+      if (session.role === "admin") {
+        navLinks.innerHTML = `
+          <a href="admin.html">Dashboard</a>
+          <a href="employees.html">Employees</a>
+          <a href="leaves.html">Leave Requests</a>
+          <a href="settings.html" class="active">Settings</a>
+          <a href="payslip.html">Payslips</a>
+        `;
+      } else {
+        navLinks.innerHTML = `
+          <a href="employee.html">My Dashboard</a>
+          <a href="leaves.html">Leaves</a>
+          <a href="payslip.html">My Payslip</a>
+        `;
+      }
+    }
+
+    function saveSettings(e) {
+      e.preventDefault();
+      const companyName = document.getElementById("companyName").value;
+      const leaveQuota = document.getElementById("leaveQuota").value;
+      DB.setCompany({ name: companyName, leaveQuota });
+      alert("Settings saved successfully!");
+    }
 
     function toggleSidebar() {
       const sidebar = document.querySelector(".sidebar");
       sidebar.classList.toggle("mobile-open");
     }
-
-    const comp = DB.getCompany();
-<<<<<<< HEAD
-    if (comp) {
-      document.getElementById("startTime").value = comp.startTime;
-      document.getElementById("graceMinutes").value = comp.graceMinutes;
-      document.getElementById("leaveQuota").value = comp.leaveQuota;
-    }
-=======
-
-    document.getElementById("startTime").value = comp.startTime;
-    document.getElementById("graceMinutes").value = comp.graceMinutes;
-    document.getElementById("leaveQuota").value = comp.leaveQuota;
->>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
-
-    document.getElementById("settingsForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      comp.startTime = document.getElementById("startTime").value;
-      comp.graceMinutes = document.getElementById("graceMinutes").value;
-      comp.leaveQuota = document.getElementById("leaveQuota").value;
-
-      DB.setCompany(comp);
-      alert("Settings saved successfully!");
-    });
   </script>
 </body>
 </html>

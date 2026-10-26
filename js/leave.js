@@ -1,13 +1,11 @@
-<<<<<<< HEAD
-=======
-function applyLeave(e) {
+function submitLeaveRequest(e) {
   e.preventDefault();
   const session = DB.getSession();
   const company = DB.getCompany();
 
   const type = document.getElementById("leaveType").value;
-  const from = document.getElementById("leaveFrom").value;
-  const to = document.getElementById("leaveTo").value;
+  const from = document.getElementById("fromDate").value;
+  const to = document.getElementById("toDate").value;
   const reason = document.getElementById("leaveReason").value;
 
   if (new Date(from) > new Date(to)) {
@@ -52,10 +50,9 @@ function applyLeave(e) {
 
   DB.setLeaves(leaves);
   alert("Leave applied successfully!");
-  location.href = "employee.html";
+  location.href = "leaves.html";
 }
 
->>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
 function updateLeaveStatus(id, newStatus) {
   const leaves = DB.getLeaves();
   const comment = prompt("Enter decision comment:");

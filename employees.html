@@ -10,7 +10,7 @@
   <div class="sidebar">
     <div class="sidebar-header">
       <h2>HCM Lite</h2>
-      <button onclick="toggleSidebar()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;" class="mobile-menu-btn">✕</button>
+      <button onclick="toggleSidebar()" class="mobile-menu-btn">✕</button>
     </div>
     <div class="sidebar-nav">
       <a href="admin.html">Dashboard</a>
@@ -25,102 +25,82 @@
     <header>
       <div style="display: flex; align-items: center; gap: 12px;">
         <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
-        <div>Manage Employees</div>
+        <div style="font-weight: 600;">Manage Employees</div>
       </div>
-      <button class="btn-logout" onclick="handleLogout()">Logout</button>
+      <div class="header-user">
+        <span id="headerUserName">Admin User</span>
+        <button class="btn-logout" onclick="handleLogout()">Logout</button>
+      </div>
     </header>
 
-    <div class="content-area" style="display: flex; gap: 24px; flex-wrap: wrap;">
-      <div style="flex: 1; min-width: 300px;" class="data-table-container">
-        <div style="padding: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
-<<<<<<< HEAD
-          <input type="text" id="searchEmp" placeholder="Search by name/email..." oninput="filterEmps()" style="padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; outline: none;">
-          <select id="filterDept" onchange="filterEmps()" style="padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; outline: none;">
-            <option value="" style="background: #1a1a1e;">All Departments</option>
-            <option value="IT" style="background: #1a1a1e;">IT</option>
-            <option value="HR" style="background: #1a1a1e;">HR</option>
-            <option value="Finance" style="background: #1a1a1e;">Finance</option>
-=======
-          <input type="text" id="searchEmp" placeholder="Search by name/email..." oninput="filterEmps()">
-          <select id="filterDept" onchange="filterEmps()">
+    <div class="content-area" style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+      <div>
+        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+          <input type="text" id="searchInput" placeholder="Search by name/email..." onkeyup="filterEmployees()" style="flex: 1; padding: 12px 16px; background: rgba(26,26,34,0.85); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none;">
+          <select id="deptFilter" onchange="filterEmployees()" style="padding: 12px 16px; background: rgba(26,26,34,0.85); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none; cursor: pointer;">
             <option value="">All Departments</option>
             <option value="IT">IT</option>
             <option value="HR">HR</option>
             <option value="Finance">Finance</option>
->>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
+            <option value="Management">Management</option>
           </select>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Department</th>
-              <th>Salary</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="employeeTableBody"></tbody>
-        </table>
+
+        <div class="data-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Salary</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="employeeTableBody"></tbody>
+          </table>
+        </div>
       </div>
 
-<<<<<<< HEAD
-      <div style="width: 320px; background: rgba(26,26,34,0.85); backdrop-filter: blur(12px); border: 1px solid var(--border-color); padding: 24px; border-radius: 16px; height: fit-content;">
-        <h3 style="margin-bottom: 16px; color: var(--text-dark);">Add Employee</h3>
-        <form id="addEmpForm" onsubmit="createEmployee(event)">
+      <div class="chart-box" style="height: fit-content;">
+        <h3 style="margin-bottom: 20px; color: var(--text-dark);">Add Employee</h3>
+        <form id="addEmployeeForm" onsubmit="addEmployee(event)">
           <div class="form-group">
             <label>Full Name</label>
-            <input type="text" id="empName" required style="width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; outline: none;">
+            <div class="input-wrapper">
+              <input type="text" id="empName" required placeholder="Enter full name" style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none;">
+            </div>
           </div>
           <div class="form-group">
             <label>Email</label>
-            <input type="email" id="empEmail" required style="width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; outline: none;">
-=======
-      <div style="width: 320px; background: white; padding: 20px; border-radius: 8px; height: fit-content;">
-        <h3>Add Employee</h3>
-        <form id="addEmpForm" onsubmit="createEmployee(event)">
-          <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" id="empName" required>
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="empEmail" required>
->>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
-            <div id="emailError" class="error-text"></div>
+            <div class="input-wrapper">
+              <input type="email" id="empEmail" required placeholder="Enter email" style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none;">
+            </div>
           </div>
           <div class="form-group">
             <label>Password</label>
-<<<<<<< HEAD
-            <input type="password" id="empPassword" required style="width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; outline: none;">
+            <div class="input-wrapper">
+              <input type="password" id="empPassword" required placeholder="Enter password" style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none;">
+            </div>
           </div>
           <div class="form-group">
             <label>Department</label>
-            <select id="empDept" required style="width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; outline: none;">
-              <option value="IT" style="background: #1a1a1e;">IT</option>
-              <option value="HR" style="background: #1a1a1e;">HR</option>
-              <option value="Finance" style="background: #1a1a1e;">Finance</option>
-=======
-            <input type="password" id="empPassword" required>
+            <div class="input-wrapper">
+              <select id="empDept" style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none; cursor: pointer;">
+                <option value="IT" style="background:#1a1a1e;">IT</option>
+                <option value="HR" style="background:#1a1a1e;">HR</option>
+                <option value="Finance" style="background:#1a1a1e;">Finance</option>
+                <option value="Management" style="background:#1a1a1e;">Management</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
-            <label>Department</label>
-            <select id="empDept" required>
-              <option value="IT">IT</option>
-              <option value="HR">HR</option>
-              <option value="Finance">Finance</option>
->>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
-            </select>
+            <label>Salary (PKR)</label>
+            <div class="input-wrapper">
+              <input type="number" id="empSalary" required placeholder="100000" style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none;">
+            </div>
           </div>
-          <div class="form-group">
-            <label>Monthly Salary</label>
-<<<<<<< HEAD
-            <input type="number" id="empSalary" min="1" required style="width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; outline: none;">
-=======
-            <input type="number" id="empSalary" min="1" required>
->>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
-          </div>
-          <button type="submit" class="btn-primary" style="width: 100%;">Create Account</button>
+          <button type="submit" class="btn-primary" style="width: 100%;">Add Employee</button>
         </form>
       </div>
     </div>
@@ -128,20 +108,83 @@
 
   <script src="js/storage.js"></script>
   <script src="js/auth.js"></script>
-  <script src="js/employees.js"></script>
   <script>
-    checkAuth("admin");
-    renderEmployeesTable();
-
-    function toggleSidebar() {
-      const sidebar = document.querySelector(".sidebar");
-      sidebar.classList.toggle("mobile-open");
+    checkAuth();
+    const session = DB.getSession();
+    if (session) {
+      document.getElementById("headerUserName").innerText = session.name;
     }
 
-    function filterEmps() {
-      const term = document.getElementById("searchEmp").value;
-      const dept = document.getElementById("filterDept").value;
-      renderEmployeesTable(term, dept);
+    if (!localStorage.getItem("hcm_employees")) {
+      localStorage.setItem("hcm_employees", JSON.stringify([
+        { id: 1, name: "raza", email: "raza@gmail.com", department: "IT", salary: 100000 }
+      ]));
+    }
+
+    DB.getEmployees = () => JSON.parse(localStorage.getItem("hcm_employees")) || [];
+    DB.setEmployees = (emps) => localStorage.setItem("hcm_employees", JSON.stringify(emps));
+
+    function renderEmployees(list) {
+      const tbody = document.getElementById("employeeTableBody");
+      let rows = list.map(emp => `
+        <tr>
+          <td>${emp.name}</td>
+          <td>${emp.email}</td>
+          <td>${emp.department || 'IT'}</td>
+          <td>PKR ${(emp.salary || 100000).toLocaleString()}</td>
+          <td>
+            <button onclick="deleteEmployee(${emp.id})" class="btn-primary" style="padding: 6px 12px; font-size: 0.85rem; background: var(--danger);">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+
+      if (!rows) rows = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No employees found.</td></tr>`;
+      tbody.innerHTML = rows;
+    }
+
+    renderEmployees(DB.getEmployees());
+
+    function addEmployee(e) {
+      e.preventDefault();
+      const name = document.getElementById("empName").value;
+      const email = document.getElementById("empEmail").value;
+      const department = document.getElementById("empDept").value;
+      const salary = parseFloat(document.getElementById("empSalary").value);
+
+      const emps = DB.getEmployees();
+      emps.push({ id: Date.now(), name, email, department, salary });
+      DB.setEmployees(emps);
+
+      document.getElementById("addEmployeeForm").reset();
+      renderEmployees(DB.getEmployees());
+      alert("Employee added successfully!");
+    }
+
+    function deleteEmployee(id) {
+      if (confirm("Are you sure you want to delete this employee?")) {
+        let emps = DB.getEmployees();
+        emps = emps.filter(e => e.id !== id);
+        DB.setEmployees(emps);
+        renderEmployees(DB.getEmployees());
+      }
+    }
+
+    function filterEmployees() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const dept = document.getElementById("deptFilter").value;
+      let emps = DB.getEmployees();
+
+      emps = emps.filter(e => {
+        const matchesQuery = e.name.toLowerCase().includes(query) || e.email.toLowerCase().includes(query);
+        const matchesDept = dept ? e.department === dept : true;
+        return matchesQuery && matchesDept;
+      });
+
+      renderEmployees(emps);
+    }
+
+    function toggleSidebar() {
+      document.querySelector(".sidebar").classList.toggle("mobile-open");
     }
   </script>
 </body>

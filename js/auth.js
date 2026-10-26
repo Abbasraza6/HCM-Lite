@@ -1,105 +1,45 @@
-if (!localStorage.getItem("hcm_users")) {
-  const defaultAdmin = [
-    {
-      id: 1,
-      name: "Super Admin",
-      email: "admin@hcmlite.com",
-      password: "admin123",
-      role: "admin",
-      department: "Management",
-      salary: 150000
-    }
-  ];
-  localStorage.setItem("hcm_users", JSON.stringify(defaultAdmin));
-}
-
-if (!localStorage.getItem("hcm_company")) {
-  const defaultCompany = {
-    name: "HCM Lite Inc.",
-    startTime: "09:00",
-    graceMinutes: 15,
-    leaveQuota: 20
-  };
-  localStorage.setItem("hcm_company", JSON.stringify(defaultCompany));
-}
-
-function handleLogin(event) {
-  event.preventDefault();
-  
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value.trim();
-<<<<<<< HEAD
+function handleLogin(e) {
+  e.preventDefault();
   const role = document.getElementById("loginRole").value;
-  const errorDiv = document.getElementById("loginError");
+  const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+  
+  let empData = {
+    id: Date.now(),
+    name: email.split('@')[0] || "User",
+    email: email || "user@hcm.com",
+    role: role,
+    department: "General",
+    salary: 100000
+  };
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!emailPattern.test(email)) {
-    if (errorDiv) {
-      errorDiv.innerText = "Please enter a valid email format!";
+  if (role === "employee") {
+    const employees = JSON.parse(localStorage.getItem("hcm_employees")) || [];
+    const found = employees.find(emp => emp.email.toLowerCase() === email);
+    if (found) {
+      empData.id = found.id;
+      empData.name = found.name;
+      empData.department = found.department;
+      empData.salary = found.salary || 100000;
     }
-    return;
   }
 
-  if (password.length > 0) {
-    const fakeUser = {
-      id: Date.now(),
-      name: email.split('@')[0],
-      email: email,
-      role: role,
-      department: "IT",
-      salary: 100000
-    };
+  DB.setSession(empData);
 
-    localStorage.setItem("hcm_session", JSON.stringify(fakeUser));
-    
-    if (fakeUser.role === "admin") {
-=======
-  const errorDiv = document.getElementById("loginError");
-
-  const users = JSON.parse(localStorage.getItem("hcm_users")) || [];
-  const foundUser = users.find(u => u.email === email && u.password === password);
-
-  if (foundUser) {
-    localStorage.setItem("hcm_session", JSON.stringify(foundUser));
-    
-    if (foundUser.role === "admin") {
->>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
-      window.location.href = "admin.html";
-    } else {
-      window.location.href = "employee.html";
-    }
+  if (role === "admin") {
+    location.href = "admin.html";
   } else {
-    if (errorDiv) {
-<<<<<<< HEAD
-      errorDiv.innerText = "Password cannot be empty!";
-=======
-      errorDiv.innerText = "Invalid Email or Password!";
-    } else {
-      alert("Invalid Email or Password!");
->>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
-    }
+    location.href = "employee.html";
+  }
+}
+
+function checkAuth() {
+  const session = DB.getSession();
+  if (!session) {
+    location.href = "index.html";
   }
 }
 
 function handleLogout() {
-  localStorage.removeItem("hcm_session");
-  window.location.href = "index.html";
-}
-
-function checkAuth(requiredRole) {
-  const session = JSON.parse(localStorage.getItem("hcm_session"));
-  
-  if (!session) {
-    window.location.href = "index.html";
-    return;
-  }
-
-  if (requiredRole && session.role !== requiredRole) {
-    if (session.role === "admin") {
-      window.location.href = "admin.html";
-    } else {
-      window.location.href = "employee.html";
-    }
-  }
+  DB.clearSession();
+  location.href = "index.html";
 }
