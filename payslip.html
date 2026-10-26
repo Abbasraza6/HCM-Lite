@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payslip - HCM Lite</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="sidebar" id="appSidebar">
+    <div class="sidebar-header">
+      <h2>HCM Lite</h2>
+      <button onclick="toggleSidebar()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;" class="mobile-menu-btn">✕</button>
+    </div>
+    <div class="sidebar-nav" id="sidebarNavLinks"></div>
+  </div>
+
+  <div class="main-wrapper">
+    <header>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+        <div style="font-weight: 600;">Monthly Payslip</div>
+      </div>
+      <div class="header-user">
+        <span id="headerUserName">User</span>
+        <button class="btn-logout" onclick="handleLogout()">Logout</button>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <div class="chart-box" style="max-width: 800px; margin: 0 auto;">
+        <h2 style="text-align: center; margin-bottom: 24px; color: var(--text-dark);" id="companyPayslipTitle">HCM Lite Inc.</h2>
+        
+        <div style="margin-bottom: 20px; color: var(--text-muted); font-size: 0.95rem;">
+          <p><strong>Employee Name:</strong> <span id="payslipName">-</span></p>
+          <p><strong>Department:</strong> <span id="payslipDept">-</span></p>
+          <p><strong>Month:</strong> <span id="payslipMonth">October 2026</span></p>
+        </div>
+
+        <div class="data-table-container" style="margin-bottom: 24px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Amount (PKR)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Base Monthly Salary</td>
+                <td id="baseSalary">0.00</td>
+              </tr>
+              <tr>
+                <td>Deductions (Absents / Half Days)</td>
+                <td id="deductions" style="color: var(--danger);">0.00</td>
+              </tr>
+              <tr>
+                <td><strong>Net Payable Salary</strong></td>
+                <td><strong id="netSalary">0.00</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <button class="btn-primary" onclick="window.print()">Print / Save PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    checkAuth();
+    const session = DB.getSession();
+    const company = DB.getCompany();
+
+    if (company) {
+      document.getElementById("companyPayslipTitle").innerText = company.name;
+    }
+
+    if (session) {
+      document.getElementById("headerUserName").innerText = session.name;
+      document.getElementById("payslipName").innerText = session.name;
+      document.getElementById("payslipDept").innerText = session.department || "IT";
+      const salary = session.salary || 100000;
+      document.getElementById("baseSalary").innerText = Number(salary).toLocaleString();
+      document.getElementById("netSalary").innerText = Number(salary).toLocaleString();
+
+      const navLinks = document.getElementById("sidebarNavLinks");
+      if (session.role === "admin") {
+        navLinks.innerHTML = `
+          <a href="admin.html">Dashboard</a>
+          <a href="employees.html">Employees</a>
+          <a href="leaves.html">Leave Requests</a>
+          <a href="settings.html">Settings</a>
+          <a href="payslip.html" class="active">Payslips</a>
+        `;
+      } else {
+        navLinks.innerHTML = `
+          <a href="employee.html">My Dashboard</a>
+          <a href="leaves.html">Leaves</a>
+          <a href="payslip.html" class="active">My Payslip</a>
+        `;
+      }
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.classList.toggle("mobile-open");
+    }
+  </script>
+</body>
+</html>

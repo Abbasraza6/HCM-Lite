@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Dashboard - HCM Lite</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>HCM Lite</h2>
+    </div>
+    <div class="sidebar-nav">
+      <a href="employee.html" class="active">My Dashboard</a>
+      <a href="leaves.html">Leaves</a>
+      <a href="payslip.html">My Payslip</a>
+    </div>
+  </div>
+
+  <div class="main-wrapper">
+    <header>
+      <div class="header-user">
+        <span>Welcome, <strong id="userName">User</strong></span>
+      </div>
+      <button class="btn-logout" onclick="handleLogout()">Logout</button>
+    </header>
+
+    <div class="content-area">
+      <div style="display: flex; gap: 16px; margin-bottom: 32px;">
+        <button class="btn-primary" id="checkInBtn" onclick="handleCheckIn()">Check In</button>
+        <button class="btn-logout" id="checkOutBtn" onclick="handleCheckOut()">Check Out</button>
+      </div>
+
+      <div class="chart-box" style="width: 100%;">
+        <h3 style="margin-bottom: 16px; color: var(--text-dark);">My Attendance History</h3>
+        <div class="data-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Hours</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceTableBody">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-muted);">No attendance records found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/employee.js"></script>
+  <script>
+    checkAuth("employee");
+    const session = DB.getSession();
+    if (session) {
+      document.getElementById("userName").innerText = session.name;
+    }
+
+    const records = DB.getAttendance().filter(r => r.empId === session.id);
+    const tbody = document.getElementById("attendanceTableBody");
+    if (records.length > 0) {
+      tbody.innerHTML = records.map(r => `
+        <tr>
+          <td>${r.date}</td>
+          <td>${r.checkIn || '-'}</td>
+          <td>${r.checkOut || '-'}</td>
+          <td>${r.hoursWorked} hrs</td>
+          <td><span class="badge ${r.status === 'Present' ? 'badge-success' : r.status === 'Late' ? 'badge-warning' : 'badge-danger'}">${r.status}</span></td>
+        </tr>
+      `).join("");
+    }
+  </script>
+</body>
+</html>

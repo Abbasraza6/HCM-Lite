@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaves - HCM Lite</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>HCM Lite</h2>
+      <button onclick="toggleSidebar()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;" class="mobile-menu-btn">✕</button>
+    </div>
+    <div class="sidebar-nav" id="sidebarNavLinks"></div>
+  </div>
+
+  <div class="main-wrapper">
+    <header>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+        <div id="headerTitle" style="font-weight: 600;">Leaves Management</div>
+      </div>
+      <div class="header-user">
+        <span id="headerUserName">User</span>
+        <button class="btn-logout" onclick="handleLogout()">Logout</button>
+      </div>
+    </header>
+
+    <div class="content-area" id="leavesContentArea"></div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/employee.js"></script>
+  <script src="js/leave.js"></script>
+  <script>
+    checkAuth();
+    const session = DB.getSession();
+
+    if (session) {
+      document.getElementById("headerUserName").innerText = session.name;
+      const navLinks = document.getElementById("sidebarNavLinks");
+      const contentArea = document.getElementById("leavesContentArea");
+
+      if (session.role === "admin") {
+        navLinks.innerHTML = `
+          <a href="admin.html">Dashboard</a>
+          <a href="employees.html">Employees</a>
+          <a href="leaves.html" class="active">Leave Requests</a>
+          <a href="settings.html">Settings</a>
+          <a href="payslip.html">Payslips</a>
+        `;
+
+        const leaves = DB.getLeaves();
+        let rows = "";
+        if (leaves.length === 0) {
+          rows = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">No leave requests found.</td></tr>`;
+        } else {
+          rows = leaves.map(l => `
+            <tr>
+              <td>${l.empName}</td>
+              <td>${l.type}</td>
+              <td>${l.from}</td>
+              <td>${l.to}</td>
+              <td>${l.days}</td>
+              <td>${l.reason}</td>
+              <td><span class="badge ${l.status === 'Approved' ? 'badge-success' : l.status === 'Rejected' ? 'badge-danger' : 'badge-warning'}">${l.status}</span></td>
+              <td>
+                ${l.status === 'Pending' ? `
+                  <button onclick="updateLeaveStatus(${l.id}, 'Approved')" class="btn-primary" style="padding: 6px 12px; font-size: 0.8rem; margin-right: 6px;">Approve</button>
+                  <button onclick="updateLeaveStatus(${l.id}, 'Rejected')" class="btn-logout" style="padding: 6px 12px; font-size: 0.8rem; color: var(--danger);">Reject</button>
+                ` : `<span style="color: var(--text-muted); font-size: 0.85rem;">${l.comment || 'Processed'}</span>`}
+              </td>
+            </tr>
+          `).join("");
+        }
+
+        contentArea.innerHTML = `
+          <div class="data-table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Type</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Days</th>
+                  <th>Reason</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+      } else {
+        navLinks.innerHTML = `
+          <a href="employee.html">My Dashboard</a>
+          <a href="leaves.html" class="active">Leaves</a>
+          <a href="payslip.html">My Payslip</a>
+        `;
+
+        const myLeaves = DB.getLeaves().filter(l => l.empId === session.id);
+        let myRows = "";
+        if (myLeaves.length === 0) {
+          myRows = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No leave requests applied yet.</td></tr>`;
+        } else {
+          myRows = myLeaves.map(l => `
+            <tr>
+              <td>${l.type}</td>
+              <td>${l.from} to ${l.to} (${l.days} days)</td>
+              <td>${l.reason}</td>
+              <td><span class="badge ${l.status === 'Approved' ? 'badge-success' : l.status === 'Rejected' ? 'badge-danger' : 'badge-warning'}">${l.status}</span></td>
+              <td>${l.comment || '-'}</td>
+            </tr>
+          `).join("");
+        }
+
+        contentArea.innerHTML = `
+          <div style="max-width: 700px; margin: 0 auto 32px auto;" class="chart-box">
+            <h3 style="margin-bottom: 20px; color: var(--text-dark);">Apply for Leave</h3>
+            <form id="leaveForm" onsubmit="submitLeaveRequest(event)">
+              <div class="form-group">
+                <label>Leave Type</label>
+                <div class="input-wrapper">
+                  <select id="leaveType" required style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none;">
+                    <option value="Casual" style="background: #1a1a1e;">Casual</option>
+                    <option value="Sick" style="background: #1a1a1e;">Sick</option>
+                    <option value="Annual" style="background: #1a1a1e;">Annual</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>From Date</label>
+                <div class="input-wrapper">
+                  <input type="date" id="fromDate" required style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none;">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>To Date</label>
+                <div class="input-wrapper">
+                  <input type="date" id="toDate" required style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none;">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Reason</label>
+                <div class="input-wrapper">
+                  <input type="text" id="leaveReason" placeholder="Enter reason for leave..." required style="width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 12px; outline: none;">
+                </div>
+              </div>
+              <button type="submit" class="btn-primary" style="width: 100%;">Submit Request</button>
+            </form>
+          </div>
+
+          <div class="chart-box" style="max-width: 800px; margin: 0 auto;">
+            <h3 style="margin-bottom: 16px; color: var(--text-dark);">My Leave History</h3>
+            <div class="data-table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Duration</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Admin Comment</th>
+                  </tr>
+                </thead>
+                <tbody>${myRows}</tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.classList.toggle("mobile-open");
+    }
+  </script>
+</body>
+</html>
