@@ -31,6 +31,7 @@
     </header>
 
     <div class="content-area">
+<<<<<<< HEAD
       <div class="chart-box" style="max-width: 500px;">
         <form id="settingsForm">
           <div class="form-group">
@@ -44,6 +45,21 @@
           <div class="form-group">
             <label>Yearly Leave Quota</label>
             <input type="number" id="leaveQuota" required style="width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; outline: none;">
+=======
+      <div style="background: white; padding: 24px; border-radius: 8px; max-width: 500px;">
+        <form id="settingsForm">
+          <div class="form-group">
+            <label>Office Start Time</label>
+            <input type="time" id="startTime" required>
+          </div>
+          <div class="form-group">
+            <label>Grace Minutes</label>
+            <input type="number" id="graceMinutes" required>
+          </div>
+          <div class="form-group">
+            <label>Yearly Leave Quota</label>
+            <input type="number" id="leaveQuota" required>
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
           </div>
           <button type="submit" class="btn-primary">Save Settings</button>
         </form>
@@ -62,11 +78,18 @@
     }
 
     const comp = DB.getCompany();
+<<<<<<< HEAD
     if (comp) {
       document.getElementById("startTime").value = comp.startTime;
       document.getElementById("graceMinutes").value = comp.graceMinutes;
       document.getElementById("leaveQuota").value = comp.leaveQuota;
     }
+=======
+
+    document.getElementById("startTime").value = comp.startTime;
+    document.getElementById("graceMinutes").value = comp.graceMinutes;
+    document.getElementById("leaveQuota").value = comp.leaveQuota;
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
 
     document.getElementById("settingsForm").addEventListener("submit", (e) => {
       e.preventDefault();

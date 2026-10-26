@@ -3,14 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
   <title>Login to HCM Lite</title>
   <link rel="stylesheet" href="css/style.css">
+=======
+  <title>Login - HCM Lite</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: var(--bg-main);
+    }
+    .login-card {
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    .login-card h2 {
+      margin-bottom: 24px;
+      color: var(--text-dark);
+      text-align: center;
+    }
+  </style>
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
 </head>
 <body>
   <div class="login-card">
     <h2>Login to HCM Lite</h2>
     <form id="loginForm" onsubmit="handleLogin(event)">
       <div class="form-group">
+<<<<<<< HEAD
         <label>Select Role</label>
         <div class="input-wrapper">
           <svg class="left-icon" viewBox="0 0 24 24" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -24,7 +53,7 @@
         <label>Email Address</label>
         <div class="input-wrapper">
           <svg class="left-icon" viewBox="0 0 24 24" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-          <input type="email" id="loginEmail" required placeholder="ghostr6xx@gmail.com">
+          <input type="email" id="loginEmail" required placeholder="someone@gmail.com">
         </div>
       </div>
       <div class="form-group">
@@ -34,6 +63,14 @@
           <input type="password" id="loginPassword" required placeholder="••••••••">
           <svg class="toggle-password" id="eyeIcon" viewBox="0 0 24 24" stroke-width="2" onclick="togglePassword()"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
         </div>
+=======
+        <label>Email Address</label>
+        <input type="email" id="loginEmail" required placeholder="admin@hcmlite.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" required placeholder="••••••••">
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
       </div>
       <div id="loginError" class="error-text" style="margin-bottom: 12px; text-align: center;"></div>
       <button type="submit" class="btn-primary" style="width: 100%;">Submit</button>
@@ -42,6 +79,7 @@
 
   <script src="js/storage.js"></script>
   <script src="js/auth.js"></script>
+<<<<<<< HEAD
   <script>
     function togglePassword() {
       const pwdInput = document.getElementById("loginPassword");
@@ -55,5 +93,7 @@
       }
     }
   </script>
+=======
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
 </body>
 </html>

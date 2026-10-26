@@ -82,7 +82,11 @@
     <div class="chat-messages" id="chatMessages"></div>
     <div class="chat-input">
       <input type="text" id="chatInput" placeholder="Ask something...">
+<<<<<<< HEAD
       <button onclick="sendChatMessage()" class="btn-primary" style="padding: 8px 14px; font-size: 0.85rem;">Send</button>
+=======
+      <button onclick="sendChatMessage()" class="btn-primary">Send</button>
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
     </div>
   </div>
 
@@ -92,6 +96,7 @@
   <script>
     checkAuth("admin");
     
+<<<<<<< HEAD
     const company = DB.getCompany();
     if (company) {
       document.getElementById("companyTitle").innerText = company.name;
@@ -100,6 +105,10 @@
     if (session) {
       document.getElementById("userName").innerText = session.name;
     }
+=======
+    document.getElementById("companyTitle").innerText = DB.getCompany().name;
+    document.getElementById("userName").innerText = DB.getSession().name;
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
 
     function toggleSidebar() {
       const sidebar = document.querySelector(".sidebar");

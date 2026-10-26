@@ -3,30 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
   <title>Employee Dashboard - HCM Lite</title>
+=======
+  <title>Employee Portal - HCM Lite</title>
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="sidebar">
+<<<<<<< HEAD
     <div class="sidebar-header">
       <h2>HCM Lite</h2>
     </div>
     <div class="sidebar-nav">
       <a href="employee.html" class="active">My Dashboard</a>
       <a href="leaves.html">Leaves</a>
+=======
+    <div class="sidebar-header"><h2>HCM Lite</h2></div>
+    <div class="sidebar-nav">
+      <a href="employee.html" class="active">My Dashboard</a>
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
       <a href="payslip.html">My Payslip</a>
     </div>
   </div>
 
   <div class="main-wrapper">
     <header>
+<<<<<<< HEAD
       <div class="header-user">
         <span>Welcome, <strong id="userName">User</strong></span>
       </div>
+=======
+      <div id="empWelcome">Welcome</div>
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
       <button class="btn-logout" onclick="handleLogout()">Logout</button>
     </header>
 
     <div class="content-area">
+<<<<<<< HEAD
       <div style="display: flex; gap: 16px; margin-bottom: 32px;">
         <button class="btn-primary" id="checkInBtn" onclick="handleCheckIn()">Check In</button>
         <button class="btn-logout" id="checkOutBtn" onclick="handleCheckOut()">Check Out</button>
@@ -35,6 +50,16 @@
       <div class="chart-box" style="width: 100%;">
         <h3 style="margin-bottom: 16px; color: var(--text-dark);">My Attendance History</h3>
         <div class="data-table-container">
+=======
+      <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 24px; display: flex; gap: 16px;">
+        <button class="btn-primary" onclick="handleCheckIn()">Check In</button>
+        <button class="btn-primary" style="background: #64748b;" onclick="handleCheckOut()">Check Out</button>
+      </div>
+
+      <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;" class="data-table-container">
+          <h3 style="padding: 16px;">My Attendance History</h3>
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
           <table>
             <thead>
               <tr>
@@ -45,6 +70,7 @@
                 <th>Status</th>
               </tr>
             </thead>
+<<<<<<< HEAD
             <tbody id="attendanceTableBody">
               <tr>
                 <td colspan="5" style="text-align: center; color: var(--text-muted);">No attendance records found.</td>
@@ -52,10 +78,42 @@
             </tbody>
           </table>
         </div>
+=======
+            <tbody id="myAttendanceBody"></tbody>
+          </table>
+        </div>
+
+        <div style="width: 320px; background: white; padding: 20px; border-radius: 8px; height: fit-content;">
+          <h3>Apply for Leave</h3>
+          <form onsubmit="applyLeave(event)">
+            <div class="form-group">
+              <label>Leave Type</label>
+              <select id="leaveType">
+                <option value="Casual">Casual</option>
+                <option value="Sick">Sick</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>From Date</label>
+              <input type="date" id="leaveFrom" required>
+            </div>
+            <div class="form-group">
+              <label>To Date</label>
+              <input type="date" id="leaveTo" required>
+            </div>
+            <div class="form-group">
+              <label>Reason</label>
+              <input type="text" id="leaveReason" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%;">Submit Request</button>
+          </form>
+        </div>
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
       </div>
     </div>
   </div>
 
+<<<<<<< HEAD
   <script src="js/storage.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/employee.js"></script>
@@ -79,6 +137,37 @@
         </tr>
       `).join("");
     }
+=======
+  <div class="chat-widget">
+    <div class="chat-header">Smart Helper</div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input">
+      <input type="text" id="chatInput" placeholder="Ask something...">
+      <button onclick="sendChatMessage()" class="btn-primary">Send</button>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/attendance.js"></script>
+  <script src="js/leave.js"></script>
+  <script src="js/helper.js"></script>
+  <script>
+    checkAuth("employee");
+    const session = DB.getSession();
+    document.getElementById("empWelcome").innerText = `Welcome, ${session.name}`;
+
+    const attendance = DB.getAttendance().filter(a => a.empId === session.id);
+    document.getElementById("myAttendanceBody").innerHTML = attendance.map(a => `
+      <tr>
+        <td>${a.date}</td>
+        <td>${a.checkIn || '-'}</td>
+        <td>${a.checkOut || '-'}</td>
+        <td>${a.hoursWorked} hrs</td>
+        <td><span class="badge ${a.status === 'Present' ? 'badge-success' : 'badge-warning'}">${a.status}</span></td>
+      </tr>
+    `).join("");
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
   </script>
 </body>
 </html>

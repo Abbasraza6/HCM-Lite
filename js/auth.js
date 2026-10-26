@@ -28,6 +28,7 @@ function handleLogin(event) {
   
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value.trim();
+<<<<<<< HEAD
   const role = document.getElementById("loginRole").value;
   const errorDiv = document.getElementById("loginError");
 
@@ -53,13 +54,30 @@ function handleLogin(event) {
     localStorage.setItem("hcm_session", JSON.stringify(fakeUser));
     
     if (fakeUser.role === "admin") {
+=======
+  const errorDiv = document.getElementById("loginError");
+
+  const users = JSON.parse(localStorage.getItem("hcm_users")) || [];
+  const foundUser = users.find(u => u.email === email && u.password === password);
+
+  if (foundUser) {
+    localStorage.setItem("hcm_session", JSON.stringify(foundUser));
+    
+    if (foundUser.role === "admin") {
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
       window.location.href = "admin.html";
     } else {
       window.location.href = "employee.html";
     }
   } else {
     if (errorDiv) {
+<<<<<<< HEAD
       errorDiv.innerText = "Password cannot be empty!";
+=======
+      errorDiv.innerText = "Invalid Email or Password!";
+    } else {
+      alert("Invalid Email or Password!");
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
     }
   }
 }

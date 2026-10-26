@@ -19,7 +19,11 @@ function renderEmployeesTable(searchTerm = "", deptFilter = "") {
       <td>${u.department}</td>
       <td>PKR ${Number(u.salary).toLocaleString()}</td>
       <td>
+<<<<<<< HEAD
         <button onclick="deleteEmployee(${u.id})" style="color: var(--danger); border: none; background: none; cursor: pointer; font-weight: 600;">Delete</button>
+=======
+        <button onclick="deleteEmployee(${u.id})" style="color: red; border: none; background: none; cursor: pointer;">Delete</button>
+>>>>>>> bc01bdb38291630fb4ff96b5915227e268af0a15
       </td>
     </tr>
   `).join("");
